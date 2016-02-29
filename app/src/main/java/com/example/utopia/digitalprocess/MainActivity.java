@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
         mProgressBar.setVisibility(View.INVISIBLE);
 
 
+
         mCallback = new DigitalUtilCallback() {
             @Override
             public void onProcessDone(String result) {
@@ -59,10 +60,12 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new DigitalUtil(5, mCallback, false, mProgressBar).processData(mInput.getText().toString());
+
             }
         });
     }
