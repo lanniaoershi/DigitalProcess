@@ -2,6 +2,8 @@ package com.example.utopia.digitalprocess;
 
 import android.os.AsyncTask;
 import android.util.ArrayMap;
+import android.view.View;
+import android.widget.ProgressBar;
 
 /**
  * Created by utopia on 16-2-26.
@@ -12,14 +14,21 @@ public class DigitalUtil {
     private DigitalUtilCallback mCallback;
     private int mGroupsCount;
     private boolean mReservedExtraDigits = false;
-
+    private ProgressBar mProgressBar;
 
     public DigitalUtil(int digitsCount, DigitalUtilCallback callback, boolean reservedExtraDigits) {
         mDigitsCount = digitsCount;
         mCallback = callback;
         mReservedExtraDigits = reservedExtraDigits;
-
     }
+
+    public DigitalUtil(int digitsCount, DigitalUtilCallback callback, boolean reservedExtraDigits, ProgressBar progressBar) {
+        mDigitsCount = digitsCount;
+        mCallback = callback;
+        mReservedExtraDigits = reservedExtraDigits;
+        mProgressBar = progressBar;
+    }
+
 
     public void processData(final String data) {
 
@@ -29,23 +38,33 @@ public class DigitalUtil {
             protected void onPreExecute() {
                 super.onPreExecute();
                 mGroupsCount = 0;
+                if (mProgressBar != null) {
+                    mProgressBar.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
             protected ArrayMap<String, String> doInBackground(String... params) {
+
+//                synchronized(this) {
+
                 ArrayMap<String, String> dataMap = new ArrayMap<>();
                 String result;
                 String digits = decode2digits(params[0]);
                 result = packet(digits);
                 dataMap.put("GROUPS_COUNT", String.valueOf(mGroupsCount));
-                dataMap.put("RESULT",result);
+                dataMap.put("RESULT", result);
                 return dataMap;
+//                }
             }
 
             @Override
             protected void onPostExecute(ArrayMap<String, String> map) {
                 super.onPostExecute(map);
                 mCallback.onProcessDone(map);
+                if (mProgressBar != null) {
+                    mProgressBar.setVisibility(View.GONE);
+                }
             }
         }.execute(data);
     }
@@ -107,6 +126,7 @@ public class DigitalUtil {
 
         int packetSize = 0;
         String tail = "";
+
         if (length % mDigitsCount != 0) {
 
             tail = temp.substring((length - length % mDigitsCount), length).toString();
@@ -114,6 +134,7 @@ public class DigitalUtil {
             temp = temp.delete((length - length % mDigitsCount), length);
 
         }
+
         while (temp.length() > 0) {
             result.append(temp.charAt(0));
             temp.deleteCharAt(0);
@@ -125,10 +146,10 @@ public class DigitalUtil {
                 packetSize = 0;
             }
         }
+
         if (mReservedExtraDigits) {
             result.append(tail);
         }
-
 
         return result.toString();
     }
