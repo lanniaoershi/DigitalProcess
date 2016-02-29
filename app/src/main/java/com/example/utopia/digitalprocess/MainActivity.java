@@ -6,6 +6,7 @@ import android.util.ArrayMap;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
@@ -14,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView mResult;
     private Button btnDel;
     private DigitalUtilCallback mCallback;
+    private ProgressBar mProgressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
         mInput = (EditText) findViewById(R.id.input);
         mResult = (TextView) findViewById(R.id.result);
         btnDel = (Button) findViewById(R.id.btn_del);
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+        mProgressBar.setVisibility(View.INVISIBLE);
 
         mCallback = new DigitalUtilCallback() {
             @Override
@@ -45,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         btnDel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DigitalUtil(5, mCallback,false).processData(mInput.getText().toString());
+                new DigitalUtil(5, mCallback,false, mProgressBar).processData(mInput.getText().toString());
             }
         });
     }
