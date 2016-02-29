@@ -36,7 +36,9 @@ public class MainActivity extends AppCompatActivity {
                 //
                 String number = result.get("RESULT");
                 String count = result.get("GROUPS_COUNT");
+
                 mResult.setText(count+"组\n"+number);
+
             }
         };
 

@@ -3,11 +3,11 @@ package com.example.utopia.digitalprocess;
 import android.os.AsyncTask;
 import android.util.ArrayMap;
 
-
 /**
  * Created by utopia on 16-2-26.
  */
 public class DigitalUtil {
+
     private int mDigitsCount;
     private DigitalUtilCallback mCallback;
     private int mGroupsCount;
@@ -18,6 +18,7 @@ public class DigitalUtil {
         mDigitsCount = digitsCount;
         mCallback = callback;
         mReservedExtraDigits = reservedExtraDigits;
+
     }
 
     public void processData(final String data) {
@@ -37,9 +38,7 @@ public class DigitalUtil {
                 String digits = decode2digits(params[0]);
                 result = packet(digits);
                 dataMap.put("GROUPS_COUNT", String.valueOf(mGroupsCount));
-                dataMap.put("RESULT", result);
-
-
+                dataMap.put("RESULT",result);
                 return dataMap;
             }
 
@@ -55,6 +54,7 @@ public class DigitalUtil {
      * @param data raw string data
      * @return digits only
      */
+
     private synchronized String decode2digits(String data) {
         StringBuilder result = new StringBuilder();
         int length = data.length();
@@ -104,6 +104,7 @@ public class DigitalUtil {
         StringBuilder temp = new StringBuilder(digits);
         StringBuilder result = new StringBuilder();
         int length = temp.length();
+
         int packetSize = 0;
         String tail = "";
         if (length % mDigitsCount != 0) {
@@ -111,10 +112,12 @@ public class DigitalUtil {
             tail = temp.substring((length - length % mDigitsCount), length).toString();
 
             temp = temp.delete((length - length % mDigitsCount), length);
+
         }
         while (temp.length() > 0) {
             result.append(temp.charAt(0));
             temp.deleteCharAt(0);
+
             packetSize++;
             if (packetSize == mDigitsCount) {
                 result.append(",");
@@ -125,6 +128,7 @@ public class DigitalUtil {
         if (mReservedExtraDigits) {
             result.append(tail);
         }
+
 
         return result.toString();
     }
