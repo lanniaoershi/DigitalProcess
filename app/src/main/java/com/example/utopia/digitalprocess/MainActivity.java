@@ -4,7 +4,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.util.ArrayMap;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     private Button btnDel, btnOk;
     private DigitalUtilCallback mCallback;
     private ProgressBar mProgressBar;
+    private DigitalUtil mDigitalUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +54,27 @@ public class MainActivity extends AppCompatActivity {
 
             }
         };
+        mDigitalUtil = new DigitalUtil(5, mCallback, false, mProgressBar);
 
+
+        mInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                Log.i("mylog","beforeTextChanged : "+s);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Log.i("mylog","onTextChanged : "+s);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Log.i("mylog","afterTextChanged : "+s);
+                mDigitalUtil.processData(s.toString());
+
+            }
+        });
         btnDel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DigitalUtil(5, mCallback, false, mProgressBar).processData(mInput.getText().toString());
+                mDigitalUtil.processData(mInput.getText().toString());
 
             }
         });

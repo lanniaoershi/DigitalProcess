@@ -61,7 +61,9 @@ public class DigitalUtil {
             @Override
             protected void onPostExecute(ArrayMap<String, String> map) {
                 super.onPostExecute(map);
-                mCallback.onProcessDone(map);
+                if (mCallback != null) {
+                    mCallback.onProcessDone(map);
+                }
                 if (mProgressBar != null) {
                     mProgressBar.setVisibility(View.GONE);
                 }
